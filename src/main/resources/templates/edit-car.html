@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <!-- Fonts and Icons -->
+    <link th:href="@{/assets/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <title>Autorank</title>
+    <style>
+        .error{
+            color: red;
+        }
+    </style>
+</head>
+<body class="py-4">
+    <h1 class="text-center mb-3">Edit car page</h1>
+    <form th:action="@{/car/edit/{car_id}(car_id=${id})}" th:object="${offer}" method="post" class="col-5 m-auto">
+        <div class="mb-3">
+            <input type="text" th:field="*{title}" th:placeholder="'Car offer title'" class="form-control">
+            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <input type="text" th:field="*{make}" th:placeholder="'Car make'" class="form-control">
+            <p th:if="${#fields.hasErrors('make')}" th:errors="*{make}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <input type="text" th:field="*{model}" th:placeholder="'Car model'" class="form-control">
+            <p th:if="${#fields.hasErrors('model')}" th:errors="*{model}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <input type="number" th:field="*{price}" th:placeholder="'Car price'" min="0" step="0.01" class="form-control">
+            <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <input type="number" th:field="*{power}" th:placeholder="'Car HP'" min="0" step="1" class="form-control">
+            <p th:if="${#fields.hasErrors('power')}" th:errors="*{power}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <input type="number" th:field="*{mileage}" th:placeholder="'Car mileage'" min="0" step="1" class="form-control">
+            <p th:if="${#fields.hasErrors('mileage')}" th:errors="*{mileage}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <input type="date" th:field="*{productionYear}" th:placeholder="'Car production date'" class="form-control">
+            <p th:if="${#fields.hasErrors('productionYear')}" th:errors="*{productionYear}" class="error"></p>
+        </div>
+        <div class="mb-3">
+            <label th:text="'Body type'"></label>
+            <select th:field="*{body}" class="form-select">
+                <option th:each="bodyType : ${offer.getBodyTypes()}" th:text="${bodyType.toString()}" th:value="${bodyType.name()}" th:selected="${bodyType.name() == offer.getBody().name()}">Body type</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label th:text="'Fuel type'"></label>
+            <select th:field="*{fuel}" class="form-select">
+                <option th:each="fuelType : ${offer.getFuelTypes()}" th:text="${fuelType.toString()}" th:value="${fuelType.name()}" th:selected="${fuelType.name() == offer.getFuel().name()}">Fuel type</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label th:text="'Gearbox type'"></label>
+            <select th:field="*{gearbox}" class="form-select">
+                <option th:each="gearboxType : ${offer.getGearboxTypes()}" th:text="${gearboxType.toString()}" th:value="${gearboxType.name()}" th:selected="${gearboxType.name() == offer.getGearbox().name()}">Gearbox type</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label th:text="'Eco category'"></label>
+            <select th:field="*{ecoCategory}" class="form-select">
+                <option th:each="ecoCategoryType : ${offer.getEcoCategories()}" th:text="${ecoCategoryType.toString()}" th:value="${ecoCategoryType.name()}" th:selected="${ecoCategoryType.name() == offer.getEcoCategory().name()}">Eco category type</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label th:text="'Is registered'"></label>
+            <input type="checkbox" th:field="*{registered}" th:value="true">
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary">Edit offer</button>
+    </form>
+</body>
+</html>

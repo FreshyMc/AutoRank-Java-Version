@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <!-- Fonts and Icons -->
+    <link th:href="@{/assets/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <title>Autorank</title>
+</head>
+<body>
+    <nav class="row m-0 p-0 g-0 px-4 py-2">
+        <h1 class="col-auto m-0 p-0 d-flex align-items-center">
+            <a th:href="@{/}" class="d-inline-flex justify-content-center align-items-center">
+                <img th:src="@{/img/logo.svg}" width="50" alt="Logo">
+                <span class="ps-4">Auto<b>Rank</b></span>
+            </a>
+        </h1>
+        <div class="col d-flex justify-content-end align-items-stretch">
+            <div sec:authorize="isAuthenticated()" class="d-flex justify-content-center align-items-center">
+                <a th:href="@{/car/register}" th:text="'Register a vehicle'"></a>
+                <a th:href="@{/car/user-all}" th:text="'Mine offers'"></a>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-lg btn-danger">Logout</button>
+                </form>
+            </div>
+            <div sec:authorize="isAnonymous()" class="d-flex justify-content-center align-items-center">
+                <a th:href="@{/login}">Login</a>
+                <a th:href="@{/register}">Register</a>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div class="car-offer">
+            <h1 th:text="${offer.getTitle()}">Car offer title</h1>
+            <p class="price-label-wrapper">
+                <span class="price-label" th:text="${offer.getPrice()} + ' $'"></span>
+            </p>
+            <div class="images-wrapper">
+                <h5 th:if="${#lists.isEmpty(offer.getPhotos())}" th:text="'This offer has no photos'"></h5>
+                <img th:each="photo : ${offer.getPhotos()}" th:src="@{/car_image/{image}(image=${photo.getPhoto()})}" style="width: 20%;">
+            </div>
+            <div class="d-flex flex-wrap justify-content-between p-3">
+                <p th:text="${offer.getBody()}"></p>
+                <p th:text="${offer.getEcoCategory()}"></p>
+                <p th:text="${offer.getFuel()}"></p>
+                <p th:text="${offer.getGearbox()}"></p>
+                <p th:text="${offer.getMake()}"></p>
+                <p th:text="${offer.getModel()}"></p>
+                <p th:text="${offer.getPower()} + 'hp'"></p>
+                <p th:text="${offer.getPrice()} + '$'"></p>
+                <p th:text="'Seller: ' + ${offer.getUser().getFullname()}"></p>
+                <p th:text="'Mileage: ' + ${offer.getMileage()}"></p>
+            </div>
+            <div>
+                <p th:text="'Seller Email: ' + ${offer.getUser().getEmail()}"></p>
+                <p th:text="'Seller Phone number: ' + ${offer.getUser().getPhoneNumber()}"></p>
+            </div>
+            <p class="px-3" th:text="'Published at: ' + ${offer.getPublishedAt()}"></p>
+            <div th:if="${isOwner}" class="d-flex justify-content-between align-items-center">
+                <p>You are the offer owner</p>
+                <a class="btn btn-lg btn-primary" th:href="@{/car/edit/{car_id}(car_id=${offer.getId()})}" th:text="'Edit'"></a>
+                <form th:action="@{/car/delete/{car_id}(car_id=${offer.getId()})}" th:object="${offer}" method="post">
+                    <button type="submit" class="btn btn-lg btn-danger">Delete car offer</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
